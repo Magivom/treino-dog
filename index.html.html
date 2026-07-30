@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel de Treino - Obediência Canina Sem Segredos</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: #f0f4f8;
+      color: #333;
+      padding: 20px;
+      transition: background-color 0.8s ease;
+    }
+
+    body.finale-theme {
+      background: linear-gradient(135deg, #101426 0%, #2d1b4e 100%);
+      color: #fff;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    @media (max-width: 850px) {
+      .container { grid-template-columns: 1fr; }
+    }
+
+    .card {
+      background: #fff;
+      padding: 25px;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+      margin-bottom: 20px;
+      transition: all 0.3s ease;
+    }
+
+    body.finale-theme .card {
+      background: rgba(255, 255, 255, 0.95);
+      color: #2c3e50;
+      box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
+      border: 2px solid #ffd700;
+    }
+
+    .full-width { grid-column: 1 / -1; }
+
+    h1, h2, h3 {
+      color: #2c3e50;
+      margin-bottom: 15px;
+    }
+
+    .ebook-badge {
+      display: inline-block;
+      background-color: #e8f5e9;
+      color: #2e7d32;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+
+    .form-group { margin-bottom: 15px; }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #4a5568;
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #cbd5e0;
+      border-radius: 8px;
+      font-size: 0.95rem;
+    }
+
+    button {
+      background-color: #3182ce;
+      color: white;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 10px rgba(49, 130, 206, 0.3);
+    }
+
+    button:hover {
+      background-color: #2b6cb0;
+      transform: translateY(-1px);
+    }
+
+    /* Área do Mascote */
+    .pet-area {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      padding: 30px 20px;
+    }
+
+    .pet-wrapper {
+      height: 140px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 10px 0;
+    }
+
+    .pet-display {
+      font-size: 80px;
+      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      display: inline-block;
+      line-height: 1;
+    }
+
+    .stage-1 { transform: scale(0.85); }
+    .stage-2 { transform: scale(1.0); }
+    .stage-3 { transform: scale(1.15); }
+    .stage-4 { transform: scale(1.3); filter: drop-shadow(0 4px 8px rgba(237,137,54,0.4)); }
+    .stage-5 { transform: scale(1.45); filter: drop-shadow(0 6px 15px rgba(255,215,0,0.7)); }
+
+    .progress-bar-container {
+      width: 100%;
+      background-color: #edf2f7;
+      border-radius: 10px;
+      height: 20px;
+      overflow: hidden;
+      margin: 15px 0 5px 0;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #48bb78, #38a169);
+      transition: width 0.4s ease;
+    }
+
+    /* TUTOR DIGITAL (DESENHO DE HOMEM) */
+    .digital-tutor-container {
+      display: flex;
+      align-items: flex-start;
+      gap: 15px;
+      background-color: #f7fafc;
+      border-radius: 12px;
+      padding: 15px;
+      border: 1px solid #e2e8f0;
+      margin-top: 15px;
+    }
+
+    .tutor-avatar-wrapper {
+      width: 60px;
+      height: 60px;
+      min-width: 60px;
+      background: #ebf8ff;
+      border: 2px solid #3182ce;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 3px 8px rgba(49, 130, 206, 0.15);
+      overflow: hidden;
+    }
+
+    .tutor-svg {
+      width: 50px;
+      height: 50px;
+    }
+
+    .tutor-bubble {
+      background: #ffffff;
+      border: 1px solid #cbd5e0;
+      border-radius: 12px;
+      padding: 12px 15px;
+      position: relative;
+      font-size: 0.9rem;
+      color: #2d3748;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+      width: 100%;
+    }
+
+    /* Repetições (1/3, 2/3, 3/3) */
+    .repetition-dots {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin: 12px 0;
+    }
+
+    .dot {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background-color: #cbd5e0;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .dot.active {
+      background-color: #48bb78;
+      box-shadow: 0 0 10px rgba(72, 187, 120, 0.6);
+      transform: scale(1.2);
+    }
+
+    /* MODAL POP-UP */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(5px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      z-index: 999;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-card {
+      background: linear-gradient(135deg, #ffffff 0%, #f7fafc 100%);
+      padding: 30px;
+      border-radius: 20px;
+      text-align: center;
+      max-width: 420px;
+      width: 90%;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+      transform: scale(0.8);
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      border: 3px solid #48bb78;
+    }
+
+    .modal-overlay.active .modal-card {
+      transform: scale(1);
+    }
+
+    .modal-icon {
+      font-size: 70px;
+      margin: 10px 0;
+      animation: bounce 1s infinite alternate;
+    }
+
+    @keyframes bounce {
+      from { transform: translateY(0); }
+      to { transform: translateY(-10px); }
+    }
+
+    .congrats-banner {
+      display: none;
+      background: linear-gradient(90deg, #ffd700, #ffae00);
+      color: #000;
+      padding: 25px;
+      border-radius: 12px;
+      text-align: center;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <!-- Banner Final -->
+    <div id="congrats-banner" class="card full-width congrats-banner">
+      🏆 PARABÉNS AO TUTOR! VOCÊ CONSEGUIU! 🏆
+      <p style="font-weight: normal; margin-top: 8px;">
+        Seu esforço e dedicação transformaram o comportamento do seu pet. Agora você tem um cão forte, obediente e um vínculo para a vida toda!
+      </p>
+    </div>
+
+    <!-- CADASTRO DO PET -->
+    <div class="card full-width" id="register-card">
+      <h2>🐶 Cadastrar Novo Pet</h2>
+      <form id="dog-register-form" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+        <div class="form-group">
+          <label for="dog-name">Nome do Dog:</label>
+          <input type="text" id="dog-name" placeholder="Ex: Thor" required>
+        </div>
+        <div class="form-group">
+          <label for="dog-breed">Raça:</label>
+          <input type="text" id="dog-breed" placeholder="Ex: Pastor Alemão" required>
+        </div>
+        <div class="form-group">
+          <label for="dog-age">Idade:</label>
+          <input type="text" id="dog-age" placeholder="Ex: 6 meses" required>
+        </div>
+        <div class="form-group" style="align-self: end;">
+          <button type="submit">Cadastrar e Iniciar Treino</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- PAINEL DO MASCOTE -->
+    <div class="card pet-area" id="pet-card" style="display: none;">
+      <span class="ebook-badge">📖 Ebook: Obediência Canina Sem Segredos</span>
+      
+      <h2 id="display-dog-name">Nome do Cão</h2>
+      <p id="display-dog-info" style="color: #718096; font-size: 0.9rem;">Raça • Idade</p>
+      
+      <div class="pet-wrapper">
+        <div id="pet-avatar" class="pet-display stage-1">🐶</div>
+      </div>
+      
+      <h3 id="pet-title">Etapa 1 - Filhote Curioso</h3>
+      
+      <div class="progress-bar-container">
+        <div id="progress-bar" class="progress-bar"></div>
+      </div>
+      <small id="progress-text">Módulo 1 de 5</small>
+    </div>
+
+    <!-- PAINEL DE TREINO COM TUTOR HOMEM -->
+    <div class="card" id="lesson-card" style="display: none;">
+      <h2 id="current-module-title">Módulo 1: Foco e Atenção</h2>
+      
+      <!-- TUTOR DIGITAL (HOMEM VETORIAL) -->
+      <div class="digital-tutor-container">
+        <div class="tutor-avatar-wrapper">
+          <!-- Ilustração Vetorial de um Tutor Homem -->
+          <svg class="tutor-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Cabelo -->
+            <path d="M25 40C25 22 35 15 50 15C65 15 75 22 75 40V45H25V40Z" fill="#2D3748"/>
+            <!-- Rosto -->
+            <path d="M30 38C30 38 30 65 50 65C70 65 70 38 70 38H30Z" fill="#FBD38D"/>
+            <!-- Olhos -->
+            <circle cx="41" cy="42" r="3" fill="#2D3748"/>
+            <circle cx="59" cy="42" r="3" fill="#2D3748"/>
+            <!-- Sorriso -->
+            <path d="M43 53C43 53 47 57 50 57C53 57 57 53 57 53" stroke="#2D3748" stroke-width="2.5" stroke-linecap="round"/>
+            <!-- Camisa / Ombros -->
+            <path d="M20 90C20 75 32 70 50 70C68 70 80 75 80 90V100H20V90Z" fill="#3182CE"/>
+            <path d="M42 70L50 82L58 70H42Z" fill="#FFFFFF"/>
+          </svg>
+        </div>
+        <div class="tutor-bubble">
+          <strong style="color: #2b6cb0;">Tutor Digital:</strong>
+          <p id="tutor-instruction" style="margin-top: 4px;">Instrução aqui...</p>
+        </div>
+      </div>
+
+      <div style="margin-top: 15px; font-size: 0.88rem; background: #feebc8; color: #c05621; padding: 10px; border-radius: 8px;" id="lesson-recommendation">
+        💡 Dica do Tutor: --
+      </div>
+
+      <!-- MEDIDOR DAS 3 REPETIÇÕES -->
+      <div style="text-align: center; margin-top: 20px;">
+        <p style="font-weight: 600; font-size: 0.9rem; color: #4a5568;">Progresso deste Módulo (3 Treinos Concluídos):</p>
+        <div class="repetition-dots">
+          <div class="dot" id="dot-1"></div>
+          <div class="dot" id="dot-2"></div>
+          <div class="dot" id="dot-3"></div>
+        </div>
+        <small id="repetition-text" style="color: #718096; font-weight: bold;">Concluído 0 de 3 treinos</small>
+      </div>
+
+      <button id="btn-practice" style="margin-top: 15px; background-color: #2b6cb0;">
+        🐾 Concluir Treino do Dia
+      </button>
+    </div>
+
+  </div>
+
+  <!-- POP-UP MODAL DE EVOLUÇÃO -->
+  <div class="modal-overlay" id="evolution-modal">
+    <div class="modal-card">
+      <h2 style="color: #2e7d32; font-size: 1.5rem;">🎉 ETAPA CONCLUÍDA!</h2>
+      <div class="modal-icon" id="modal-pet-icon">🐕</div>
+      <h3 id="modal-pet-title" style="color: #2b6cb0; margin-bottom: 10px;">Seu Pet Evoluiu!</h3>
+      <p id="modal-message" style="color: #4a5568; font-size: 0.95rem; margin-bottom: 20px;">
+        Parabéns! Você completou as 3 repetições e seu cão está cada vez mais forte e obediente!
+      </p>
+      <button id="btn-modal-next" style="background-color: #48bb78; font-size: 1rem;">
+        Continuar para o Próximo Módulo 🚀
+      </button>
+    </div>
+  </div>
+
+  <script>
+    const ebookLessons = [
+      {
+        stage: 1,
+        title: "Etapa 1: Foco, Nome e Atenção",
+        instruction: "Olá! Vamos começar simples: segure um petisco perto dos seus olhos. Quando seu cão olhar para você ao ouvir o nome dele, recompense no mesmo instante!",
+        recommendation: "Treine 3 sessões curtas de 5 minutos durante o dia."
+      },
+      {
+        stage: 2,
+        title: "Etapa 2: Comando 'Senta' e 'Fica'",
+        instruction: "Agora passe o petisco suavemente sobre a cabeça dele. Ao sentar, diga 'Senta' e entregue o prêmio. Depois, use a mão aberta para o 'Fica'.",
+        recommendation: "Aumente o tempo de permanência no 'Fica' gradativamente."
+      },
+      {
+        stage: 3,
+        title: "Etapa 3: Passeio Perfeito (Sem Puxar)",
+        instruction: "Hora do passeio! Sempre que a guia esticar ou ele puxar, pare imediatamente. Só volte a andar quando a guia afrouxar.",
+        recommendation: "Pratique primeiro dentro de casa antes de ir para a rua."
+      },
+      {
+        stage: 4,
+        title: "Etapa 4: Controle de Ansiedade",
+        instruction: "Se ele pular ou latir pedindo atenção, ignore totalmente. Só dê carinho e petisco quando estiver com as 4 patas no chão e calmo.",
+        recommendation: "Use brinquedos recheáveis nos momentos de solidão."
+      },
+      {
+        stage: 5,
+        title: "Etapa 5: Guardião Avançado",
+        instruction: "Excelente trabalho! Agora vamos praticar todos os comandos em locais com distrações (barulhos, pessoas e outros cães).",
+        recommendation: "Mantenha a rotina diária de 10 minutos para fixação eterna!"
+      }
+    ];
+
+    const stagesVisual = [
+      { className: "stage-1", title: "Nível 1 - Filhote Curioso", icon: "🐶" },
+      { className: "stage-2", title: "Nível 2 - Jovem Aprendiz", icon: "🐕" },
+      { className: "stage-3", title: "Nível 3 - Cão Obediente", icon: "🦮" },
+      { className: "stage-4", title: "Nível 4 - Cão Forte e Atlético 💪", icon: "🐕‍🦺" },
+      { className: "stage-5", title: "Nível 5 - Mestre Supremo 👑", icon: "🐕" }
+    ];
+
+    let currentModuleIndex = 0;
+    let currentRepetitions = 0;
+    const requiredRepetitions = 3;
+    let currentDog = null;
+
+    const dogRegisterForm = document.getElementById('dog-register-form');
+    const registerCard = document.getElementById('register-card');
+    const petCard = document.getElementById('pet-card');
+    const lessonCard = document.getElementById('lesson-card');
+    
+    const displayDogName = document.getElementById('display-dog-name');
+    const displayDogInfo = document.getElementById('display-dog-info');
+    const petAvatar = document.getElementById('pet-avatar');
+    const petTitle = document.getElementById('pet-title');
+    const progressBar = document.getElementById('progress-bar');
+    const progressText = document.getElementById('progress-text');
+
+    const currentModuleTitle = document.getElementById('current-module-title');
+    const tutorInstruction = document.getElementById('tutor-instruction');
+    const lessonRecommendation = document.getElementById('lesson-recommendation');
+    const btnPractice = document.getElementById('btn-practice');
+    const congratsBanner = document.getElementById('congrats-banner');
+
+    const evolutionModal = document.getElementById('evolution-modal');
+    const modalPetIcon = document.getElementById('modal-pet-icon');
+    const modalPetTitle = document.getElementById('modal-pet-title');
+    const modalMessage = document.getElementById('modal-message');
+    const btnModalNext = document.getElementById('btn-modal-next');
+
+    dogRegisterForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      currentDog = {
+        name: document.getElementById('dog-name').value,
+        breed: document.getElementById('dog-breed').value,
+        age: document.getElementById('dog-age').value
+      };
+
+      registerCard.style.display = 'none';
+      petCard.style.display = 'flex';
+      lessonCard.style.display = 'block';
+
+      displayDogName.innerText = currentDog.name;
+      displayDogInfo.innerText = `${currentDog.breed} • ${currentDog.age}`;
+
+      loadCurrentModule();
+      updatePetVisuals();
+    });
+
+    function loadCurrentModule() {
+      const lesson = ebookLessons[currentModuleIndex];
+      currentModuleTitle.innerText = lesson.title;
+      tutorInstruction.innerText = lesson.instruction;
+      lessonRecommendation.innerText = `💡 Dica do Tutor: ${lesson.recommendation}`;
+      
+      currentRepetitions = 0;
+      updateRepetitionDots();
+    }
+
+    btnPractice.addEventListener('click', function() {
+      if (currentRepetitions < requiredRepetitions) {
+        currentRepetitions++;
+        updateRepetitionDots();
+
+        if (currentRepetitions === requiredRepetitions) {
+          showEvolutionModal();
+        }
+      }
+    });
+
+    function updateRepetitionDots() {
+      for (let i = 1; i <= 3; i++) {
+        const dot = document.getElementById(`dot-${i}`);
+        if (i <= currentRepetitions) {
+          dot.classList.add('active');
+        } else {
+          dot.classList.remove('active');
+        }
+      }
+      document.getElementById('repetition-text').innerText = `Concluído ${currentRepetitions} de ${requiredRepetitions} treinos`;
+    }
+
+    function showEvolutionModal() {
+      const nextVisual = stagesVisual[Math.min(currentModuleIndex + 1, stagesVisual.length - 1)];
+      
+      modalPetIcon.innerText = nextVisual.icon;
+      modalPetTitle.innerText = `${currentDog.name} alcançou o ${nextVisual.title}!`;
+      modalMessage.innerText = `Você concluiu todas as 3 repetições da ${ebookLessons[currentModuleIndex].title}. Seu cão cresceu e está mais forte!`;
+      
+      evolutionModal.classList.add('active');
+    }
+
+    btnModalNext.addEventListener('click', function() {
+      evolutionModal.classList.remove('active');
+
+      if (currentModuleIndex < ebookLessons.length - 1) {
+        currentModuleIndex++;
+        updatePetVisuals();
+        loadCurrentModule();
+      } else {
+        currentModuleIndex = ebookLessons.length - 1;
+        updatePetVisuals();
+        triggerGrandFinale();
+      }
+    });
+
+    function updatePetVisuals() {
+      const visual = stagesVisual[currentModuleIndex];
+      
+      petAvatar.className = `pet-display ${visual.className}`;
+      petAvatar.innerText = visual.icon;
+      petTitle.innerText = visual.title;
+
+      const percentage = Math.round(((currentModuleIndex + 1) / ebookLessons.length) * 100);
+      progressBar.style.width = `${percentage}%`;
+      progressText.innerText = `Módulo ${currentModuleIndex + 1} de ${ebookLessons.length} (${percentage}%)`;
+    }
+
+    function triggerGrandFinale() {
+      document.body.classList.add('finale-theme');
+      lessonCard.style.display = 'none';
+      congratsBanner.style.display = 'block';
+      petTitle.innerText = `👑 ${currentDog.name} - Mestre da Obediência!`;
+    }
+  </script>
+</body>
+</html>
